@@ -1,10 +1,12 @@
 import express from "express";
 import { config } from "dotenv";
 import { executeCheck } from "./src/main.mjs";
+import cors from "cors";
 
 config();
 
 const app = express();
+app.use(cors());
 const port = process.env.PORT || 3001;
 
 const handleOptions = (req, res) => {
