@@ -1,6 +1,4 @@
 // dependencies
-import request from 'request';
-import fs from 'fs';
 import { createClient } from '@supabase/supabase-js';
 import { config } from "dotenv";
 
