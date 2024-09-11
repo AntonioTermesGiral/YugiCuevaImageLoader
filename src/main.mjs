@@ -34,18 +34,22 @@ const uploadImage = async (id) => {
 
     // Uploads the file to the bucket
     const { data: uploadData, error: uploadError } = await supabase.storage.from('CardImages')
-        .upload(`${id}.jpg`, file, { cacheControl: '3600', upsert: false });
+        .upload(`${id}.jpg`, file, { cacheControl: '3600', upsert: true });
 
     console.log("File uploaded: ", uploadData);
-    console.log("File uploaded id: ", uploadData.id);
+    console.log("File uploaded id: ", uploadData?.id);
     uploadError && console.log("File upload error: ", uploadError);
 
-    // Updates the card with the image id
-    const { data: updateData, error: updateError } = await supabase.from('card')
-        .update({ image: uploadData.id }).eq('id', id).select();
+    if (uploadData) {
+        // Updates the card with the image id
+        const { data: updateData, error: updateError } = await supabase.from('card')
+            .update({ image: uploadData.id }).eq('id', id).select();
 
-    console.log("Card updated: ", updateData);
-    updateError && console.log("Card update error: ", updateError);
+        console.log("Card updated: ", updateData);
+        updateError && console.log("Card update error: ", updateError);
+    } else {
+        console.log("Couldnt upload card: " + id);
+    }
 }
 
 export const executeCheck = async () => {
