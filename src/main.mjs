@@ -39,8 +39,25 @@ const uploadImage = async (id) => {
     console.log("File uploaded: ", uploadData);
     console.log("File uploaded id: ", uploadData?.id);
     uploadError && console.log("File upload error: ", uploadError);
+    let idToUse = uploadData?.id;
 
-    if (uploadData) {
+    if (!idToUse) {
+        const { data: existingImgData, error: existingImgError } = await supabase.storage.from('CardImages')
+            .list('', {
+                limit: 1,
+                offset: 0,
+                search: `${id}.jpg`
+            });
+
+        console.log("Existing card: ", existingImgData?.[0])
+        existingImgError && console.log("Existing card error: ", existingImgError);
+        
+        if (existingImgData?.[0].id) {
+            idToUse = existingImgData?.[0].id;
+        }
+    }
+
+    if (idToUse) {
         // Updates the card with the image id
         const { data: updateData, error: updateError } = await supabase.from('card')
             .update({ image: uploadData.id }).eq('id', id).select();
