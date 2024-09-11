@@ -60,7 +60,7 @@ const uploadImage = async (id) => {
     if (idToUse) {
         // Updates the card with the image id
         const { data: updateData, error: updateError } = await supabase.from('card')
-            .update({ image: uploadData.id }).eq('id', id).select();
+            .update({ image: idToUse }).eq('id', id).select();
 
         console.log("Card updated: ", updateData);
         updateError && console.log("Card update error: ", updateError);
