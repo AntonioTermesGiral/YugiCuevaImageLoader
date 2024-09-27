@@ -16,12 +16,12 @@ const doLogin = async () => {
     console.log(user.session.access_token);
 }
 
-const getCardIds = async (getAll) => {
-    const { data, error } = await supabase.from('card').select("id, image");
+const getCardIds = async () => {
+    const { data, error } = await supabase.from('card').select("id, image").is("image", null);
     error && console.log("Card fetch error: ", error);
+    const noImageCards = data.map(card => card.id);
 
-    const noImageCards = data.filter(card => card.image == null).map(card => card.id);
-    return getAll ? data : noImageCards;
+    return noImageCards;
 }
 
 const uploadImage = async (id) => {
